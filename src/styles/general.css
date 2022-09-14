@@ -1,32 +1,68 @@
-.container{
+.general-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
-.container > * {
-  margin: 2rem;
-}
-
-.profile{
+.profile {
   display: flex;
   flex-direction: column;
   align-content: center;
   justify-content: center;
+  margin-bottom: 1rem;
+  width: max(50%, 6rem);
+  max-width: 13rem;
+  min-width: 0;
 }
 
-.profile > img {
-  width: 8rem;
+/* display mode */
+.profile>div>img {
+  width: 100%;
+  max-width: 10rem;
+  height: auto;
   align-self: center;
 }
 
-.profile > div {
+/* edit mode */
+.profile>span>img {
+  width: 100%;
+  max-width: 5rem;
+  height: auto;
+  align-self: center;
+}
+
+.profile>input {
+  margin-top: 0.5rem;
+  background-color: var(--gray-400);
+}
+
+.profile>div, .profile>span {
   text-align: center;
 }
 
-.contact{
+.contact {
   display: flex;
+  width: max(50%, 6rem);
+  max-width: 13rem;
   flex-direction: column;
   align-items: flex-end;
   justify-content: space-around;
+  margin-left: 1rem;
+  min-width: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.contact>div {
+  width: 100%;
+}
+
+.contact>div>input {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.contact > div > input{
+  background-color: var(--gray-400);
 }

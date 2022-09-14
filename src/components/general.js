@@ -1,22 +1,13 @@
 import React, { Component } from "react";
 import '../styles/general.css';
-import avatar from '../resources/images/avatar.png';
+import avatar from '../resources/images/avatar.jpg';
 
 export class General extends Component {
   constructor(props) {
     super(props);
-    /*this.state = {
-      editMode: true,
-      name: '',
-      age: '',
-      country: '',
-      city: '',
-      email: '',
-      phone: '',
-    };*/
     this.state = {
       editMode: false,
-      name: 'Jonhy',
+      name: 'Jonhy Bravo',
       age: '26',
       country: 'Lithuania',
       city: 'Vilnius',
@@ -41,19 +32,15 @@ export class General extends Component {
   }
 
   formMode = () => {
-    return <form onSubmit={this.handleSubmit} className='container'>
+    return <form onSubmit={this.handleSubmit} className='general-container'>
       <div class="profile">
-        <img src={avatar} alt='profile'></img>
-        <div>
-          <div>
-            <input type="text" placeholder='Full Name' value={this.state.name} onChange={this.handleChange} name='name' />
-            <input type="text" placeholder='Age' value={this.state.age} onChange={this.handleChange} name='age' />
-          </div>
-          <div>
-            <input type="text" placeholder='Country' value={this.state.country} onChange={this.handleChange} name='country' />
-            <input type="text" placeholder='City' value={this.state.city} onChange={this.handleChange} name='city' />
-          </div>
-        </div>
+        <span>
+          <img src={avatar} alt='profile'></img>
+        </span>
+        <input type="text" placeholder='Full Name' value={this.state.name} onChange={this.handleChange} name='name' />
+        <input type="text" placeholder='Age' value={this.state.age} onChange={this.handleChange} name='age' />
+        <input type="text" placeholder='Country' value={this.state.country} onChange={this.handleChange} name='country' />
+        <input type="text" placeholder='City' value={this.state.city} onChange={this.handleChange} name='city' />
       </div>
       <div class="contact">
         <div>
@@ -61,27 +48,27 @@ export class General extends Component {
           <input type="text" placeholder='Email' value={this.state.email} onChange={this.handleChange} name='email' />
           <input type="text" placeholder='Phone' value={this.state.phone} onChange={this.handleChange} name='phone' />
         </div>
-        <input type="submit" value="Confirm" />
+        <input type="submit" value="Confirm" className="button-inverted" />
       </div>
-    </form>
+    </form >
   }
 
   displayMode = () => {
-    return <div class='container'>
-      <div class="profile">
-        <img src={avatar} alt='profile'></img>
+    return <div className='general-container'>
+      <div className="profile">
+        <div><img src={avatar} alt='profile'></img></div>
         <div>
           <h3>{this.state.name}<span>, {this.state.age}</span></h3>
           <p>{this.state.country}, {this.state.city}</p>
         </div>
       </div>
-      <div class="contact">
+      <div className="contact">
         <div>
           <h4>Contact</h4>
           <p>{this.state.email}</p>
           <p>{this.state.phone}</p>
         </div>
-        <button onClick={() => { this.setState({ editMode: true }) }}>Edit</button>
+        <button onClick={() => { this.setState({ editMode: true }) }} className="button">Edit</button>
       </div>
     </div>
   }

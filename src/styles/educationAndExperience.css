@@ -1,0 +1,59 @@
+.flex-h{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-top: 1rem;
+  justify-content: space-between;
+}
+
+.form-container{
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.form-container > * > input{
+  margin-top: 1rem;
+}
+
+input[type='text'], input[type='date']{
+  padding: 0.5rem 1.25rem 0.5rem 1.25rem;
+  border-radius: 0.25rem;
+  border: none;
+  background-color: var(--gray-300);
+}
+
+input[type='text']:focus, input[type='date']:focus{
+  outline: 0.15rem solid var(--gray-800);
+}
+
+.edu-container{
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+}
+
+.form-flex-child{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+  max-width: 50%;
+  margin: 0.5rem;
+  flex-grow: 1;
+  font-size: max(8px, min(16px, 2vh))
+}
+
+.form-flex-child > label{
+  margin-top: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.form-buttons{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-buttons > * {
+  margin-right: 1rem;
+}
