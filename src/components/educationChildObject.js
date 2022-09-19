@@ -1,12 +1,7 @@
-import React, { Component } from "react";
+export const EducationObject = (props) => {
 
-export class EducationObject extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  displayMode = () => {
-    const { school, title, start, end, objectId, deleteObject, areButtonsHidden } = this.props;
+  const displayMode = () => {
+    const { school, title, start, end, objectId, deleteObject, showButtons } = props;
     return <div className='flex-h'>
       <div>
         <p><b>Educational institution</b> {school}</p>
@@ -15,29 +10,26 @@ export class EducationObject extends Component {
         <p><b>End date</b> {end}</p>
       </div>
       <div>
-        {!areButtonsHidden && <button onClick={this.editButtonEvent} className="icon mr-2"><span className="material-icons">
+        {showButtons && <button onClick={editButtonEvent} className="icon mr-2"><span className="material-icons">
           edit
         </span></button>}
-        {!areButtonsHidden && <button onClick={() => deleteObject(objectId)} className="icon-red"><span className="material-icons">
+        {showButtons && <button onClick={() => deleteObject(objectId)} className="icon-red"><span className="material-icons">
           delete
         </span></button>}
       </div>
     </div>
   }
 
-  editButtonEvent = () => {
-    const { copyStateToParent, objectId, hideButtons } = this.props;
+  const editButtonEvent = () => {
+    const { copyStateToParent, objectId, hideButtons } = props;
     hideButtons();
     copyStateToParent(objectId); // fills form and also sets editing to true
   }
 
-  EditMode = () => {
-    const { objectId, handleEdit } = this.props;
-    return handleEdit(objectId)
+  const editMode = () => {
+    const { objectId, handleEdit } = props;
+    return handleEdit(objectId);
   }
 
-  render() {
-    const { editing } = this.props;
-    return editing ? this.EditMode() : this.displayMode()
-  }
+  return props.editing ? editMode() : displayMode();
 }

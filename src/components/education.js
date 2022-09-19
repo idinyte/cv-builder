@@ -1,146 +1,132 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { EducationObject } from './educationChildObject.js'
 import uniqid from "uniqid";
 import '../styles/educationAndExperience.css';
 
-export class Education extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      formMode: false,
-      hideButtons: false,
-      educationChildObjects: [],
-      educationChildObjectData: {
-        school: '',
-        title: '',
-        start: '',
-        end: '',
-        editing: false,
-        id: uniqid()
-      }
-    }
-  }
+export const Education = () => {
+  const [formMode, setFormMode] = useState(false);
+  const [showButtons, setShowButtons] = useState(true);
+  const [educationChildObjects, setEducationChildObjects] = useState([]);
+  const [educationChildObjectData, setEducationChildObjectData] = useState({
+    school: '',
+    title: '',
+    start: '',
+    end: '',
+    editing: false,
+    id: uniqid()
+  });
 
-  clearAndCloseForm = () => {
-    this.setState({
-      formMode: false,
-      hideButtons: false,
-      educationChildObjectData: {
-        school: '',
-        title: '',
-        start: '',
-        end: '',
-        editing: false,
-        id: uniqid()
-      }
+  const clearAndCloseForm = () => {
+    setFormMode(false);
+    setShowButtons(true);
+    setEducationChildObjectData({
+      school: '',
+      title: '',
+      start: '',
+      end: '',
+      editing: false,
+      id: uniqid()
     });
   }
 
-  handleChange = (e) => {
-    let copy = { ...this.state.educationChildObjectData }
-    copy[e.target.name] = e.target.value;
-    this.setState({ educationChildObjectData: copy });
+  const handleChange = (e) => {
+    setEducationChildObjectData({ ...educationChildObjectData, [e.target.name]: e.target.value });
   }
 
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     //push new EducationObject
-    this.setState(prevState => ({
-      educationChildObjects: [...prevState.educationChildObjects, this.state.educationChildObjectData],
-    }));
+    setEducationChildObjects([...educationChildObjects, educationChildObjectData]);
 
-    this.clearAndCloseForm();
+    clearAndCloseForm();
   }
 
-  handleEditSubmit = (e, objectId) => {
+  const handleEditSubmit = (e, objectId) => {
     e.preventDefault();
-    let copy = [...this.state.educationChildObjects];
-    this.setState({
-      educationChildObjects: copy.map(item => {
-        if (item.id === objectId) {
-          let EducationObject = this.state.educationChildObjectData;
-          EducationObject.editing = false;
-          return EducationObject
-        }
-        else return item
-      })
+    let copy = [...educationChildObjects].map(item => {
+      if (item.id === objectId) {
+        let EducationObject = educationChildObjectData;
+        EducationObject.editing = false;
+        return EducationObject
+      }
+      else return item
     });
 
-    this.clearAndCloseForm();
+    setEducationChildObjects(copy);
+
+    clearAndCloseForm();
   }
 
-  handleCancel = (e, objectId) => {
+  const handleCancel = (e, objectId) => {
     e.preventDefault();
     if (objectId) {
-      let copy = [...this.state.educationChildObjects];
-      this.setState({
-        educationChildObjects: copy.map(item => {
-          if (item.id === objectId) {
-            item.editing = false;
-            return item
-          }
-          else return item
-        }),
+      let copy = [...educationChildObjects].map(item => {
+        if (item.id === objectId) {
+          item.editing = false;
+          return item
+        }
+        else return item
       });
+
+      setEducationChildObjects(copy);
     }
 
-    this.clearAndCloseForm();
+    clearAndCloseForm();
   }
 
-  hideButtons = () => {
-    this.setState({ hideButtons: true });
+  const hideButtons = () => {
+    setShowButtons(false);
   }
 
-  fillFormFromEducationObject = (objectId) => {
-    if (this.state.educationChildObjectData.id === objectId) return
+  const fillFormFromEducationObject = (objectId) => {
+    if (educationChildObjectData.id === objectId) return
 
-    const data = this.state.educationChildObjects.find(item => item.id === objectId);
+    const data = educationChildObjects.find(item => item.id === objectId);
     data.editing = true;
-    this.setState({ educationChildObjectData: data });
+    setEducationChildObjectData(data);
   }
 
-  formMode = (objectId = '') => {
-    return <form onSubmit={objectId ? (event) => this.handleEditSubmit(event, objectId) : this.handleSubmit} onCancel={this.handleCancel}>
+  const displayFormMode = (objectId = '') => {
+    return <form onSubmit={objectId ? (event) => handleEditSubmit(event, objectId) : handleSubmit} onCancel={handleCancel}>
       <div className='flex-h'>
         <div className='form-flex-child'>
           <label for="school">Educational institution</label>
-          <input type="text" id='school' placeholder='Educational institution' value={this.state.educationChildObjectData.school} onChange={this.handleChange} name='school' required/><br />
+          <input type="text" id='school' placeholder='Educational institution' value={educationChildObjectData.school} onChange={handleChange} name='school' /><br />
           <label for="title">Title of study</label>
-          <input type="text" id='title' placeholder='Title of study' value={this.state.educationChildObjectData.title} onChange={this.handleChange} name='title' required/>
+          <input type="text" id='title' placeholder='Title of study' value={educationChildObjectData.title} onChange={handleChange} name='title' />
         </div>
         <div className='form-flex-child'>
           <label for="start">Start date</label>
-          <input type="date" id='start' placeholder='Start date' value={this.state.educationChildObjectData.start} onChange={this.handleChange} name='start' required/><br />
+          <input type="date" id='start' placeholder='Start date' value={educationChildObjectData.start} onChange={handleChange} name='start' /><br />
           <label for="end">End date</label>
-          <input type="date" id='end' placeholder='End date' value={this.state.educationChildObjectData.end} onChange={this.handleChange} name='end' required/>
+          <input type="date" id='end' placeholder='End date' value={educationChildObjectData.end} onChange={handleChange} name='end' />
         </div>
       </div><br />
       <div class="form-buttons">
         <input type="submit" value="Confirm" className="button-inverted" />
-        <button onClick={(event) => this.handleCancel(event, objectId)} className="button">Cancel</button>
+        <button onClick={(event) => handleCancel(event, objectId)} className="button">Cancel</button>
       </div>
     </form>
   }
 
-  displayMode = () => {
-    return this.state.hideButtons ? null : <button onClick={() => { this.setState({ formMode: true, hideButtons: true }) }} className="button-inverted mt-4">Add</button>
+  const displayMode = () => {
+    return showButtons ? <button onClick={() => { setFormMode(true); setShowButtons(false); }} className="button-inverted mt-4">Add</button> : null;
   }
 
-  deleteEducationObject = (key) => {
-    const filtered = this.state.educationChildObjects.filter(object => object.id !== key);
-    this.setState({ educationChildObjects: filtered });
+  const deleteEducationObject = (key) => {
+    const filtered = educationChildObjects.filter(object => object.id !== key);
+    setEducationChildObjects(filtered);
   }
 
-  render() {
-    return <div className="edu-container">
-      <h2 className="center-text">Education</h2>
-      {this.state.educationChildObjects.map((data) => {
-        return <EducationObject school={data.school} title={data.title} start={data.start} end={data.end}
-          objectId={data.id} deleteObject={this.deleteEducationObject} handleEdit={this.formMode} copyStateToParent={this.fillFormFromEducationObject}
-          hideButtons={this.hideButtons} areButtonsHidden={this.state.hideButtons} editing={data.editing} key={data.id} />;
-      })}
-      {this.state.formMode ? this.formMode() : this.displayMode()}
-    </div>
-  }
+  return <div className="edu-container">
+    <h2 className="center-text">Education</h2>
+    {educationChildObjects.map((data) => {
+      console.log(data);
+      return <EducationObject school={data.school} title={data.title} start={data.start} end={data.end}
+        objectId={data.id} deleteObject={deleteEducationObject} handleEdit={displayFormMode} copyStateToParent={fillFormFromEducationObject}
+        hideButtons={hideButtons} showButtons={showButtons} editing={data.editing} key={data.id} />;
+    })}
+    {formMode ? displayFormMode() : displayMode()}
+  </div>
 }
