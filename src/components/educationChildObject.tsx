@@ -1,11 +1,27 @@
-export const ExperienceObject = (props) => {
+import React from "react";
+
+interface Props {
+  school: string,
+  title: string,
+  start: string,
+  end: string,
+  editing: boolean,
+  objectId: string,
+  deleteObject: (objectId: string) => void,
+  handleEdit: (objectId?: string) => JSX.Element,
+  copyStateToParent: (objectId: string) => void,
+  hideButtons: () => void,
+  showButtons: boolean,
+}
+
+export const EducationObject = (props: Props) => {
+
   const displayMode = () => {
-    const { company, position, description, start, end, objectId, deleteObject, showButtons } = props;
-    return <div  className='flex-h'>
+    const { school, title, start, end, objectId, deleteObject, showButtons } = props;
+    return (<div className='flex-h'>
       <div>
-        <p><b>Company name</b> {company}</p>
-        <p><b>Position</b> {position}</p>
-        <p><b>Description of main tasks</b> {description}</p>
+        <p><b>Educational institution</b> {school}</p>
+        <p><b>Title of study</b> {title}</p>
         <p><b>Start date</b> {start}</p>
         <p><b>End date</b> {end}</p>
       </div>
@@ -17,18 +33,18 @@ export const ExperienceObject = (props) => {
           delete
         </span></button>}
       </div>
-    </div>
+    </div>)
   }
 
   const editButtonEvent = () => {
     const { copyStateToParent, objectId, hideButtons } = props;
-    hideButtons(); // hides add, edit, delete buttons from parent and other ExperienceObjects
+    hideButtons();
     copyStateToParent(objectId); // fills form and also sets editing to true
   }
 
   const editMode = () => {
     const { objectId, handleEdit } = props;
-    return handleEdit(objectId)
+    return handleEdit(objectId);
   }
 
   return props.editing ? editMode() : displayMode();

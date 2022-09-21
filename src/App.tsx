@@ -6,7 +6,7 @@ import './styles/app.css'
 
 class App extends Component {
   render() {
-    return <div class='cv-container'>
+    return <div className='cv-container'>
       <General />
       <Education />
       <Experience />

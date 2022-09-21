@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import { EducationObject } from './educationChildObject.js'
+import { EducationObject } from './educationChildObject'
 import uniqid from "uniqid";
 import '../styles/educationAndExperience.css';
 
 export const Education = () => {
-  const [formMode, setFormMode] = useState(false);
-  const [showButtons, setShowButtons] = useState(true);
-  const [educationChildObjects, setEducationChildObjects] = useState([]);
-  const [educationChildObjectData, setEducationChildObjectData] = useState({
+  interface EducationChildObject{
+    school: string,
+    title: string,
+    start: string,
+    end: string,
+    editing: boolean,
+    id: string
+  }
+  const [formMode, setFormMode] = useState<boolean>(false);
+  const [showButtons, setShowButtons] = useState<boolean>(true);
+  const [educationChildObjects, setEducationChildObjects] = useState<EducationChildObject[]>([]);
+  const [educationChildObjectData, setEducationChildObjectData] = useState<EducationChildObject>({
     school: '',
     title: '',
     start: '',
@@ -29,11 +37,11 @@ export const Education = () => {
     });
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEducationChildObjectData({ ...educationChildObjectData, [e.target.name]: e.target.value });
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     //push new EducationObject
@@ -42,7 +50,7 @@ export const Education = () => {
     clearAndCloseForm();
   }
 
-  const handleEditSubmit = (e, objectId) => {
+  const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>, objectId: string) => {
     e.preventDefault();
     let copy = [...educationChildObjects].map(item => {
       if (item.id === objectId) {
@@ -58,7 +66,7 @@ export const Education = () => {
     clearAndCloseForm();
   }
 
-  const handleCancel = (e, objectId) => {
+  const handleCancel = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, objectId: string) => {
     e.preventDefault();
     if (objectId) {
       let copy = [...educationChildObjects].map(item => {
@@ -79,31 +87,33 @@ export const Education = () => {
     setShowButtons(false);
   }
 
-  const fillFormFromEducationObject = (objectId) => {
+  const fillFormFromEducationObject = (objectId: string) => {
     if (educationChildObjectData.id === objectId) return
 
     const data = educationChildObjects.find(item => item.id === objectId);
+    if (data === undefined) return;
+
     data.editing = true;
     setEducationChildObjectData(data);
   }
 
-  const displayFormMode = (objectId = '') => {
-    return <form onSubmit={objectId ? (event) => handleEditSubmit(event, objectId) : handleSubmit} onCancel={handleCancel}>
+  const displayFormMode = (objectId = ''):JSX.Element => {
+    return <form onSubmit={objectId ? (event) => handleEditSubmit(event, objectId) : handleSubmit}>
       <div className='flex-h'>
         <div className='form-flex-child'>
-          <label for="school">Educational institution</label>
+          <label htmlFor="school">Educational institution</label>
           <input type="text" id='school' placeholder='Educational institution' value={educationChildObjectData.school} onChange={handleChange} name='school' /><br />
-          <label for="title">Title of study</label>
+          <label htmlFor="title">Title of study</label>
           <input type="text" id='title' placeholder='Title of study' value={educationChildObjectData.title} onChange={handleChange} name='title' />
         </div>
         <div className='form-flex-child'>
-          <label for="start">Start date</label>
+          <label htmlFor="start">Start date</label>
           <input type="date" id='start' placeholder='Start date' value={educationChildObjectData.start} onChange={handleChange} name='start' /><br />
-          <label for="end">End date</label>
+          <label htmlFor="end">End date</label>
           <input type="date" id='end' placeholder='End date' value={educationChildObjectData.end} onChange={handleChange} name='end' />
         </div>
       </div><br />
-      <div class="form-buttons">
+      <div className="form-buttons">
         <input type="submit" value="Confirm" className="button-inverted" />
         <button onClick={(event) => handleCancel(event, objectId)} className="button">Cancel</button>
       </div>
@@ -114,19 +124,18 @@ export const Education = () => {
     return showButtons ? <button onClick={() => { setFormMode(true); setShowButtons(false); }} className="button-inverted mt-4">Add</button> : null;
   }
 
-  const deleteEducationObject = (key) => {
+  const deleteEducationObject = (key: string) => {
     const filtered = educationChildObjects.filter(object => object.id !== key);
     setEducationChildObjects(filtered);
   }
 
-  return <div className="edu-container">
+  return (<div className="edu-container">
     <h2 className="center-text">Education</h2>
     {educationChildObjects.map((data) => {
-      console.log(data);
       return <EducationObject school={data.school} title={data.title} start={data.start} end={data.end}
         objectId={data.id} deleteObject={deleteEducationObject} handleEdit={displayFormMode} copyStateToParent={fillFormFromEducationObject}
         hideButtons={hideButtons} showButtons={showButtons} editing={data.editing} key={data.id} />;
     })}
     {formMode ? displayFormMode() : displayMode()}
-  </div>
+  </div>)
 }

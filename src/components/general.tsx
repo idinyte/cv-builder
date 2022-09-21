@@ -13,18 +13,18 @@ export const General = () => {
     phone: '+37067894561',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPersonData({...personData, [e.target.name]: e.target.value});
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setEditMode(false);
   }
 
   const formMode = () => {
     return <form onSubmit={handleSubmit} className='general-container'>
-      <div class="profile">
+      <div className="profile">
         <span>
           <img src={avatar} alt='profile'></img>
         </span>
@@ -33,7 +33,7 @@ export const General = () => {
         <input type="text" placeholder='Country' value={personData.country} onChange={handleChange} name='country' />
         <input type="text" placeholder='City' value={personData.city} onChange={handleChange} name='city' />
       </div>
-      <div class="contact">
+      <div className="contact">
         <div>
           <h4>Contact</h4>
           <input type="text" placeholder='Email' value={personData.email} onChange={handleChange} name='email' />
@@ -45,7 +45,7 @@ export const General = () => {
   }
 
   const displayMode = () => {
-    return <div className='general-container'>
+    return (<div className='general-container'>
       <div className="profile">
         <div><img src={avatar} alt='profile'></img></div>
         <div>
@@ -61,7 +61,7 @@ export const General = () => {
         </div>
         <button onClick={() => { setEditMode(true); }} className="button">Edit</button>
       </div>
-    </div>
+    </div>)
   }
 
   return editMode ? formMode() : displayMode();
