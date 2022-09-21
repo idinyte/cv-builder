@@ -7,17 +7,17 @@ interface Props {
   start: string,
   end: string,
   editing: boolean,
-  objectId: string,
-  deleteObject: (objectId: string) => void,
-  handleEdit: (objectId?: string) => JSX.Element,
-  copyStateToParent: (objectId: string) => void,
+  id: string,
+  deleteObject: (id: string) => void,
+  parentFormMode: (id?: string) => JSX.Element,
+  copyStateToParent: (id: string) => void,
   hideButtons: () => void,
-  showButtons: boolean,
+  areButtonsShown: boolean,
 }
 
 export const ExperienceObject = (props: Props) => {
   const displayMode = () => {
-    const { company, position, description, start, end, objectId, deleteObject, showButtons } = props;
+    const { company, position, description, start, end, id, deleteObject, areButtonsShown } = props;
     return <div  className='flex-h'>
       <div>
         <p><b>Company name</b> {company}</p>
@@ -27,10 +27,10 @@ export const ExperienceObject = (props: Props) => {
         <p><b>End date</b> {end}</p>
       </div>
       <div>
-        {showButtons && <button onClick={editButtonEvent} className="icon mr-2"><span className="material-icons">
+        {areButtonsShown && <button onClick={editButtonEvent} className="icon mr-2"><span className="material-icons">
           edit
         </span></button>}
-        {showButtons && <button onClick={() => deleteObject(objectId)} className="icon-red"><span className="material-icons">
+        {areButtonsShown && <button onClick={() => deleteObject(id)} className="icon-red"><span className="material-icons">
           delete
         </span></button>}
       </div>
@@ -38,14 +38,14 @@ export const ExperienceObject = (props: Props) => {
   }
 
   const editButtonEvent = () => {
-    const { copyStateToParent, objectId, hideButtons } = props;
+    const { copyStateToParent, id, hideButtons } = props;
     hideButtons(); // hides add, edit, delete buttons from parent and other ExperienceObjects
-    copyStateToParent(objectId); // fills form and also sets editing to true
+    copyStateToParent(id); // fills form and also sets editing to true
   }
 
   const editMode = () => {
-    const { objectId, handleEdit } = props;
-    return handleEdit(objectId)
+    const { id, parentFormMode } = props;
+    return parentFormMode(id)
   }
 
   return props.editing ? editMode() : displayMode();

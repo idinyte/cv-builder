@@ -13,7 +13,7 @@ export const Education = () => {
     id: string
   }
   const [formMode, setFormMode] = useState<boolean>(false);
-  const [showButtons, setShowButtons] = useState<boolean>(true);
+  const [areButtonsShown, setAreButtonsShown] = useState<boolean>(true);
   const [educationChildObjects, setEducationChildObjects] = useState<EducationChildObject[]>([]);
   const [educationChildObjectData, setEducationChildObjectData] = useState<EducationChildObject>({
     school: '',
@@ -26,7 +26,7 @@ export const Education = () => {
 
   const clearAndCloseForm = () => {
     setFormMode(false);
-    setShowButtons(true);
+    setAreButtonsShown(true);
     setEducationChildObjectData({
       school: '',
       title: '',
@@ -50,10 +50,10 @@ export const Education = () => {
     clearAndCloseForm();
   }
 
-  const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>, objectId: string) => {
+  const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>, id: string) => {
     e.preventDefault();
     let copy = [...educationChildObjects].map(item => {
-      if (item.id === objectId) {
+      if (item.id === id) {
         let EducationObject = educationChildObjectData;
         EducationObject.editing = false;
         return EducationObject
@@ -66,11 +66,11 @@ export const Education = () => {
     clearAndCloseForm();
   }
 
-  const handleCancel = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, objectId: string) => {
+  const handleCancel = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
     e.preventDefault();
-    if (objectId) {
+    if (id) {
       let copy = [...educationChildObjects].map(item => {
-        if (item.id === objectId) {
+        if (item.id === id) {
           item.editing = false;
           return item
         }
@@ -84,21 +84,21 @@ export const Education = () => {
   }
 
   const hideButtons = () => {
-    setShowButtons(false);
+    setAreButtonsShown(false);
   }
 
-  const fillFormFromEducationObject = (objectId: string) => {
-    if (educationChildObjectData.id === objectId) return
+  const fillFormFromEducationObject = (id: string) => {
+    if (educationChildObjectData.id === id) return
 
-    const data = educationChildObjects.find(item => item.id === objectId);
+    const data = educationChildObjects.find(item => item.id === id);
     if (data === undefined) return;
 
     data.editing = true;
     setEducationChildObjectData(data);
   }
 
-  const displayFormMode = (objectId = ''):JSX.Element => {
-    return <form onSubmit={objectId ? (event) => handleEditSubmit(event, objectId) : handleSubmit}>
+  const displayFormMode = (id = ''):JSX.Element => {
+    return <form onSubmit={id ? (event) => handleEditSubmit(event, id) : handleSubmit}>
       <div className='flex-h'>
         <div className='form-flex-child'>
           <label htmlFor="school">Educational institution</label>
@@ -115,13 +115,13 @@ export const Education = () => {
       </div><br />
       <div className="form-buttons">
         <input type="submit" value="Confirm" className="button-inverted" />
-        <button onClick={(event) => handleCancel(event, objectId)} className="button">Cancel</button>
+        <button onClick={(event) => handleCancel(event, id)} className="button">Cancel</button>
       </div>
     </form>
   }
 
   const displayMode = () => {
-    return showButtons ? <button onClick={() => { setFormMode(true); setShowButtons(false); }} className="button-inverted mt-4">Add</button> : null;
+    return areButtonsShown ? <button onClick={() => { setFormMode(true); setAreButtonsShown(false); }} className="button-inverted mt-4">Add</button> : null;
   }
 
   const deleteEducationObject = (key: string) => {
@@ -133,8 +133,8 @@ export const Education = () => {
     <h2 className="center-text">Education</h2>
     {educationChildObjects.map((data) => {
       return <EducationObject school={data.school} title={data.title} start={data.start} end={data.end}
-        objectId={data.id} deleteObject={deleteEducationObject} handleEdit={displayFormMode} copyStateToParent={fillFormFromEducationObject}
-        hideButtons={hideButtons} showButtons={showButtons} editing={data.editing} key={data.id} />;
+        id={data.id} deleteObject={deleteEducationObject} parentFormMode={displayFormMode} copyStateToParent={fillFormFromEducationObject}
+        hideButtons={hideButtons} areButtonsShown={areButtonsShown} editing={data.editing} key={data.id} />;
     })}
     {formMode ? displayFormMode() : displayMode()}
   </div>)

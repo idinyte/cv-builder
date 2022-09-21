@@ -13,7 +13,7 @@ export const Experience = () => {
     id: string
   }
   const [formMode, setFormMode] = useState<boolean>(false);
-  const [showButtons, setShowButtons] = useState<boolean>(true);
+  const [areButtonsShown, setAreButtonsShown] = useState<boolean>(true);
   const [experienceChildObjects, setExperienceChildObjects] = useState<ExperienceChildObject[]>([]);
   const [experienceChildObjectData, setExperienceChildObjectData] = useState<ExperienceChildObject>({
     company: '',
@@ -27,7 +27,7 @@ export const Experience = () => {
 
   const clearAndCloseForm = () => {
     setFormMode(false);
-    setShowButtons(true);
+    setAreButtonsShown(true);
     setExperienceChildObjectData({
       company: '',
       position: '',
@@ -52,10 +52,10 @@ export const Experience = () => {
     clearAndCloseForm();
   }
 
-  const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>, objectId: string) => {
+  const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>, id: string) => {
     e.preventDefault();
     let copy = [...experienceChildObjects].map(item => {
-      if (item.id === objectId) {
+      if (item.id === id) {
         let experienceObject = experienceChildObjectData;
         experienceObject.editing = false;
         return experienceObject
@@ -68,11 +68,11 @@ export const Experience = () => {
     clearAndCloseForm();
   }
 
-  const handleCancel = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, objectId: string) => {
+  const handleCancel = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
     e.preventDefault();
-    if (objectId) {
+    if (id) {
       let copy = [...experienceChildObjects].map(item => {
-        if (item.id === objectId) {
+        if (item.id === id) {
           item.editing = false;
           return item
         }
@@ -86,21 +86,21 @@ export const Experience = () => {
   }
 
   const hideButtons = () => {
-    setShowButtons(false);
+    setAreButtonsShown(false);
   }
 
-  const fillFormFromExperienceObject = (objectId: string) => {
-    if (experienceChildObjectData.id === objectId) return
+  const fillFormFromExperienceObject = (id: string) => {
+    if (experienceChildObjectData.id === id) return
 
-    const data = experienceChildObjects.find(item => item.id === objectId);
+    const data = experienceChildObjects.find(item => item.id === id);
     if (data === undefined) return;
 
     data.editing = true;
     setExperienceChildObjectData(data);
   }
 
-  const displayFormMode = (objectId = '') => {
-    return <form onSubmit={objectId ? (event) => handleEditSubmit(event, objectId) : handleSubmit} className='container'>
+  const displayFormMode = (id = '') => {
+    return <form onSubmit={id ? (event) => handleEditSubmit(event, id) : handleSubmit} className='container'>
       <div className='flex-h'>
         <div className='form-flex-child'>
           <label htmlFor="company">Company name</label>
@@ -119,17 +119,17 @@ export const Experience = () => {
       </div>
       <div className="form-buttons">
         <input type="submit" value="Confirm" className="button-inverted" />
-        <button onClick={(event) => handleCancel(event, objectId)} className="button">Cancel</button>
+        <button onClick={(event) => handleCancel(event, id)} className="button">Cancel</button>
       </div>
     </form>
   }
 
   const displayMode = () => {
-    return showButtons ? <button onClick={() => { setFormMode(true); setShowButtons(false) }} className="button-inverted mt-4">Add</button> : null
+    return areButtonsShown ? <button onClick={() => { setFormMode(true); setAreButtonsShown(false) }} className="button-inverted mt-4">Add</button> : null
   }
 
-  const deleteExperienceObject = (objectId: string) => {
-    const filtered = experienceChildObjects.filter(object => object.id !== objectId);
+  const deleteExperienceObject = (id: string) => {
+    const filtered = experienceChildObjects.filter(object => object.id !== id);
     setExperienceChildObjects(filtered);
   }
 
@@ -137,8 +137,8 @@ export const Experience = () => {
     <h2 className="center-text">Experience</h2>
     {experienceChildObjects.map((data) => {
       return <ExperienceObject company={data.company} position={data.position} description={data.description} start={data.start} end={data.end}
-        objectId={data.id} deleteObject={deleteExperienceObject} handleEdit={displayFormMode} copyStateToParent={fillFormFromExperienceObject}
-        hideButtons={hideButtons} showButtons={showButtons} editing={data.editing} key={data.id} />;
+        id={data.id} deleteObject={deleteExperienceObject} parentFormMode={displayFormMode} copyStateToParent={fillFormFromExperienceObject}
+        hideButtons={hideButtons} areButtonsShown={areButtonsShown} editing={data.editing} key={data.id} />;
     })}
     {formMode ? displayFormMode() : displayMode()}
   </div>
